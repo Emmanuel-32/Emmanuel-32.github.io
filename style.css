@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(182, 193, 246);
+    background: linear-gradient(to right, rgb(14,60,134),rgb(99,6,6),rgb(249,253,246));
     font-family: 'Times New Roman';
     margin: 2;
 }
@@ -72,5 +72,9 @@ a:hover{
     background:fixed;
     max-height: 200px;
     max-width: 140px;
+}
+#pic:hover{
+    transform: scale(1.1) rotate(3deg);
+    box-shadow: 20px 10px 25px;
 }
 
