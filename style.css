@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to right, rgb(14,60,134),rgb(99,6,6),rgb(249,253,246));
+    background: linear-gradient(to right, rgb(246, 61, 61),rgb(249, 244, 244),rgb(64, 129, 234));
     font-family: 'Times New Roman';
     margin: 2;
 }
@@ -77,4 +77,3 @@ a:hover{
     transform: scale(1.1) rotate(3deg);
     box-shadow: 20px 10px 25px;
 }
-
