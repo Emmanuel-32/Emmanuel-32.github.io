@@ -28,17 +28,74 @@
     <!-- QUIZ CONTENT (hidden at start) -->
     <div id="quizContainer" style="text-align: center; display: none;">
 
-    <h2 id="question"></h2>
-
-    <input id="answerInput" type="text" placeholder="Enter your answer">
-
+    <h2>Make your mad lib!</h2>
+    <form id="madlibForm">
+    
+    <label for="adjective1"> Adjective: </label> 
+    <input id="adjective1" type="text" placeholder="Enter your answer">
     <br><br>
 
-    <button onclick="checkAnswer()">Submit Answer</button>
+    <label for="noun1"> Noun: </label>
+    <input id="noun1" type="text" placeholder="Enter your answer">
+    <br><br>
 
+    <label for="verb1"> Verb: </label>
+    <input id="verb1" type="text" placeholder="Enter your answer">
+    <br><br>    
+
+    <label for="noun2"> Noun: </label>
+    <input id="noun2" type="text" placeholder="Enter your answer">
+    <br><br>
+
+    <label for="adjective2"> Adjective: </label>
+    <input id="adjective2" type="text" placeholder="Enter your answer">
+    <br><br>
+
+    <label for="noun3"> Noun: </label>
+    <input id="noun3" type="text" placeholder="Enter your answer">
+    <br><br>
+
+    <label for="verb2"> Verb: </label>
+    <input id="verb2" type="text" placeholder="Enter your answer">
+    <br><br>
+    
+
+    <button type="button" onclick="makeStory()">Make your story!</button>
+    </form>
+     
+
+    <div id="story" style="display: none;margin-top: 30px;">
+        <h2>Your Story:</h2>
+        <p id="storyText"></p>
+        <button onclick="resetGame()">Play Again</button>
     </div>
+ </div> 
 
     <script>
+        function startGame(){
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("quizContainer").style.display = "block"
+        }
+        function makeStory(){
+            const adjec1 = document.getElementById("adjective1").value;
+            const noun1 = document.getElementById("noun1").value;
+            const verb1 = document.getElementById("verb1").value;
+            const noun2 = document.getElementById("noun2").value;
+            const adjec2 = document.getElementById("adjective2").value;
+            const noun3 = document.getElementById("noun3").value;
+            const verb2 = document.getElementById("verb2").value;
+
+            const story = `Yesterday, I saw a ${adjec1} ${noun1} trying to ${verb1} a giant ${noun2}. It was so ${adjec2} that I accidentally dropped my ${noun3} and started to ${verb2}!`;
+            document.getElementById("storyText").textContent = story;
+            document.getElementById("madlibForm").style.display = "none";
+            document.getElementById("story").style.display = "block";
+        }
+
+        function resetGame(){
+            document.getElementById("story").style.display = "none";
+            document.getElementById("madlibForm").style.display = "block"
+            document.getElementById("madlibForm").reset();
+        }
 
     </script>
 
