@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Block Game</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="startGame()">
+    <div class = "nav">
+        <a href="index.html" class = "navlink">Index</a> <br>
+        <a href="resume.html" class = "navlink">Resumé</a> <br>
+        <a href="photos.html" class = "navlink">Photos</a> <br>
+        <a href="geoquiz.html" class = "navlink">Geoquiz</a> <br>
+        <a href = "madlib.html"> Madlib</a> <br>
+        <a href="blockgame.html" class = "navlink">Block Game</a>
+    </div>
+
+    <h2>Block Push Game</h2>
+    <p>Push blocks by touching them. You can push up to 2 at once.</p>
+    
+    <canvas id="gameCanvas" width="500" height="500" style="background-color: black;"></canvas>
+    
+    <script>
+        // Globals
+        let canvas, ctx;
+
+        const BLOCK_SIZE = 40;
+        const SPEED = 5;
+
+        // Classes 
+        class Player{
+            // constructor
+            constructor(x, y){
+                this.x = x;
+                this.y = y;
+                this.size = 30;
+            }
+
+            draw(){
+                ctx.fillStyle = "blue";
+                ctx.fillRect(this.x,this.y,this.size,this.size);
+            }
+        }
+            // Set Up
+            function startGame(){
+                canvas = document.getElementById("gameCanvas");
+                ctx = canvas.getContext("2d");
+
+                player = new Player(235,235);
+
+                document.addEventListener("keydown", handleKeys);
+
+                draw();
+            }
+
+            function move(dx, dy){
+                let newX = player.x + dx;
+                let newY = player.y + dy;
+
+                // Stay in Bounds
+                if (newX < 0 || newY < 0 || newX > canvas.width || newY > canvas.height){
+                    return;
+                }
+
+                player.x = newX;
+                player.y = newY;
+
+                draw();
+            }
+        
+            // Draw for all objects on the canvas
+            function draw(){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+
+                player.draw();
+            }
+
+            // Controls - Key Binding
+            function handleKeys(e){
+                if (e.key === "w"){
+                    move(0,-SPEED);
+                }
+                if (e.key === "s"){
+                    move(0,SPEED);
+                }
+                if (e.key === "a"){
+                    move(-SPEED,0);
+                }
+                if (e.key === "d"){
+                    move(SPEED,0);
+                }
+            }
+
+
+    </script>
+</body>
+</html>
