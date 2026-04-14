@@ -30,7 +30,7 @@
 <script>
 
     // ===== GLOBALS =====
-    let canvas, ctx, head, food, snake;
+    let canvas, ctx, head, food, snake, gameOver = false;
     // ===== CLASS =====
     class Head {
         constructor(x, y) {
@@ -39,7 +39,7 @@
             this.size = 20;
             this.color = "blue";
 
-            this.speed = 5;
+            this.speed = 4;
             this.dx = this.speed;
             this.dy = 0;
         }
@@ -70,10 +70,9 @@
     }
     class Food {
         constructor() {
-            this.x = Math.floor(Math.random() * canvas.width);
-            this.y = Math.floor(Math.random() * canvas.height);
-            this.color = "red"
-            this.size = 20
+            this.size = 20;
+            this.color = "red";
+            this.placeFood();
         }
         draw(ctx) {
             ctx.fillStyle = this.color
@@ -81,8 +80,8 @@
         }
 
         placeFood() {
-        this.x = Math.floor(Math.random() * 800);
-        this.y = Math.floor(Math.random() * 450);
+        this.x = Math.floor(Math.random() * (800 - this.size));
+        this.y = Math.floor(Math.random() * (450 - this.size));
         }
     }
 
@@ -91,9 +90,11 @@
         canvas = document.getElementById("gameCanvas");
         ctx = canvas.getContext("2d");
 
-        head = new Head (200,200)
+        head = new Head (200,200);
+        food = new Food();
 
-        food = new Food()
+        snake = [];
+        gameOver = false;
 
         document.addEventListener("keydown", handleKeys);
 
@@ -102,21 +103,51 @@
 
     // ===== GAME LOOP =====
     function gameLoop() {
+        if (gameOver) return;
         update();
         draw();
         requestAnimationFrame(gameLoop);
     }
 
     function update() {
+        let prevX = head.x;
+        let prevY = head.y;
         head.move();
+
+        for (let i = snake.length - 1; i >0; i--) {
+            snake[i].x = snake[i-1].x;
+            snake[i].y = snake[i-1].y;
+        }
+        if (snake.length > 0) {
+            snake[0].x = prevX;
+            snake[0].y = prevY;
+        }
+
+        if (head.x <0 || head.y < 0 || head.x + head.size > canvas.width || head.y + head.size > canvas.height) {
+            gameOver = true;
+        }
+        for (let segment of snake) {
+            if (head.x === segment.x && head.y === segment.y) {
+                gameOver = true;
+            }
+        }
+
+    if (head.x < food.x + food.size && head.x + head.size > food.x && head.y < food.y + food.size && head.y + head.size > food.y) {
+        snake.push( new Segment(prevX, prevY));
+        food.placeFood();
     }
-    
+    } 
 
 
     // ===== DRAW =====
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         head.draw(ctx);
+        food.draw(ctx);
+        for (let segment of snake) {
+            segment.draw(ctx);
+        }
+        
     }
 
     // ===== CONTROLS =====
