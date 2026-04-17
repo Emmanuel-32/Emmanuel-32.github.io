@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+    <title> Maze Game </title>
+    <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="nav">
+            <a href = "index.html">Index </a> <br>
+            <a href = "resume.html"> Resumé</a> <br>
+            <a href = "photos.html"> Photos</a> <br>
+            <a href = "geoquiz.html"> Geoquiz</a> <br>
+            <a href = "madlib.html"> Madlib</a> <br> 
+            <a href="blockgame.html" class = "navlink">Block Game</a> <br>
+            <a href="snake.html"> Snake</a> <br>
+            <a href="maze.html"> Maze</a>
+        </div>
+        
+    
+
+    <script>
+    let canvas, ctx
+
+
+    class Tile {
+        constructor(type,x,y) {
+            this.x = x;
+            this.y = y;
+            this.size = 20
+            this.color = "blue"
+        }
+
+            draw(ctx) {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.size, this.size)
+            }
+        }
+
+
+    let rawMaze = [
+        [0,1,1,1,1,0,0,0,1,1,0,1,1,1,0]
+        [0,0,0,1,1,0,1,0,0,1,0,0,0,1,0]
+        [1,1,0,0,0,0,0,1,0,1,0,1,0,0,2]
+        [1,1,0,1,1,1,0,1,0,0,0,1,1,1,1]
+        [1,0,0,0,0,1,0,1,0,1,0,0,0,1,1]
+        [1,1,1,1,0,1,0,0,1,1,1,1,0,0,0]
+        [1,0,0,0,0,1,0,1,1,0,0,0,1,1,0]
+        [0,0,1,1,1,1,0,1,1,0,1,0,1,1,0]
+        [1,0,1,1,0,0,0,0,0,0,0,1,1,1,0]
+        [1,1,1,0,0,1,1,0,1,0,0,3,0,0,1]
+        [1,1,0,0,1,1,1,0,0,0,1,0,1,0,1]
+        [1,1,0,1,1,0,1,1,0,1,1,0,1,0,1]
+        [1,0,0,0,1,0,0,0,0,1,0,0,1,0,1]
+        [1,0,1,0,1,1,0,1,1,0,0,1,1,1,1]
+        [1,1,1,1,2,0,0,1,1,1,0,0,0,4,1]
+        
+    ];
+
+
+    
+
+
+
+
+
+
+
+    </script>
+    </body>
+</html>
