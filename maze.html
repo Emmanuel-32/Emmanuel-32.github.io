@@ -21,7 +21,7 @@
         </div>
         
     
-
+    <canvas id="gameCanvas" width="300" height="300" style="background-color: black;"></canvas>
     <script>
     let canvas, ctx
 
@@ -40,6 +40,35 @@
             }
         }
 
+    class Player {
+        constructor(x,y) {
+            this.x = x;
+            this.y = y;
+            this.size = 15;
+            this.color = "green";
+            this.speed = 5;
+            this.dx = this.speed;
+            this.dy = 0;
+        }
+        draw(ctx) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+        move() {
+            this.x += this.dx;
+            this.y += this.dy;
+        }
+    }
+
+    function startGame() {
+
+        canvas = document.getElementById("gameCanvas");
+        ctx = canvas.getContext("2d");
+
+        player = new Player(20,20)
+
+        document.addEventListener("keydown", handleKeys);
+
 
     let rawMaze = [
         [0,1,1,1,1,0,0,0,1,1,0,1,1,1,0]
@@ -57,16 +86,39 @@
         [1,0,0,0,1,0,0,0,0,1,0,0,1,0,1]
         [1,0,1,0,1,1,0,1,1,0,0,1,1,1,1]
         [1,1,1,1,2,0,0,1,1,1,0,0,0,4,1]
-        
-    ];
+        ];
+    }
 
-
+    for (let row =0; row < 15; row++)
+        for (let column =0); column < 15; column++)
     
 
 
+function handleKeys(e) {
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+            e.preventDefault();
+        }
 
+        if (e.key === "w" && head.dy !== head.speed) {
+            head.dy = -head.speed;
+            head.dx = 0;
+        }
 
+        if (e.key === "s" && head.dy !== -head.speed) {
+            head.dy = head.speed;
+            head.dx = 0;
+        }
 
+        if (e.key === "a" && head.dx !== head.speed) {
+            head.dy = 0;
+            head.dx = -head.speed;
+        }
+
+        if (e.key === "d" && head.dx !== -head.speed) {
+            head.dy = 0;
+            head.dx = head.speed;
+        }
+    }
 
 
     </script>
