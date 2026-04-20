@@ -23,20 +23,34 @@
     
     <canvas id="gameCanvas" width="300" height="300" style="background-color: black;"></canvas>
     <script>
-    let canvas, ctx
+    let canvas, ctx, player,gameOver = false;
+    let maze = [];
+    let keysFound = 0;
 
 
     class Tile {
         constructor(type,x,y) {
-            this.x = x;
-            this.y = y;
+            this.type = type;
+            this.x = x * 20
+            this.y = y * 20
             this.size = 20
-            this.color = "blue"
+
+            if (type===0) this.color = "black"; //space
+            if (type===1) this.color = "blue"; //wall
+            if (type===2) this.color = "yellow"; //key
+            if (type===3) this.color = "purple"; //door
+            if (type===4) this.color = "red"; //exit
         }
 
             draw(ctx) {
             ctx.fillStyle = this.color
             ctx.fillRect(this.x, this.y, this.size, this.size)
+            }
+
+            isPassable() {
+                if (this.type===1) return false;
+                if (this.type===3 && keysFound === 0 && 1) return false;
+                return true
             }
         }
 
@@ -46,18 +60,38 @@
             this.y = y;
             this.size = 15;
             this.color = "green";
-            this.speed = 5;
-            this.dx = this.speed;
-            this.dy = 0;
+            this.speed = 20;
+            
         }
         draw(ctx) {
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.size, this.size);
         }
-        move() {
-            this.x += this.dx;
-            this.y += this.dy;
+        move(dx, dy) {
+            let newX = this.x + dx;
+            let newY = this.y + dy;
+
+            let gridX = newX / 20;
+            let gridY = newY / 20
+            let tile = maze[gridY][gridX]
+
+            if (tile && tile.isPassable()) {
+                this.x = newX
+                this.y = newY
+                this.interact(tile)
+            }
         }
+        interact(tile) {
+            if (tile.type === 2) {
+                keysFound++;
+                tile.type = 0;
+                tile.color = "black"
+            }
+            if (tile.type===4) {
+                gameOver = true
+            }
+        }
+
     }
 
     function startGame() {
@@ -65,62 +99,60 @@
         canvas = document.getElementById("gameCanvas");
         ctx = canvas.getContext("2d");
 
-        player = new Player(20,20)
-
-        document.addEventListener("keydown", handleKeys);
-
-
-    let rawMaze = [
-        [0,1,1,1,1,0,0,0,1,1,0,1,1,1,0]
-        [0,0,0,1,1,0,1,0,0,1,0,0,0,1,0]
-        [1,1,0,0,0,0,0,1,0,1,0,1,0,0,2]
-        [1,1,0,1,1,1,0,1,0,0,0,1,1,1,1]
-        [1,0,0,0,0,1,0,1,0,1,0,0,0,1,1]
-        [1,1,1,1,0,1,0,0,1,1,1,1,0,0,0]
-        [1,0,0,0,0,1,0,1,1,0,0,0,1,1,0]
-        [0,0,1,1,1,1,0,1,1,0,1,0,1,1,0]
-        [1,0,1,1,0,0,0,0,0,0,0,1,1,1,0]
-        [1,1,1,0,0,1,1,0,1,0,0,3,0,0,1]
-        [1,1,0,0,1,1,1,0,0,0,1,0,1,0,1]
-        [1,1,0,1,1,0,1,1,0,1,1,0,1,0,1]
-        [1,0,0,0,1,0,0,0,0,1,0,0,1,0,1]
-        [1,0,1,0,1,1,0,1,1,0,0,1,1,1,1]
-        [1,1,1,1,2,0,0,1,1,1,0,0,0,4,1]
+        let rawMaze = [
+            [0,1,1,1,1,0,0,0,1,1,0,1,1,1,0],
+            [0,0,0,1,1,0,1,0,0,1,0,0,0,1,0],
+            [1,1,0,0,0,0,0,1,0,1,0,1,0,0,2],
+            [1,1,0,1,1,1,0,1,0,0,0,1,1,1,1],
+            [1,0,0,0,0,1,0,1,0,1,0,0,0,1,1],
+            [1,1,1,1,0,1,0,0,1,1,1,1,0,0,0],
+            [1,0,0,0,0,1,0,1,1,0,0,0,1,1,0],
+            [0,0,1,1,1,1,0,1,1,0,1,0,1,1,0],
+            [1,0,1,1,0,0,0,0,0,0,0,1,1,1,0],
+            [1,1,1,0,0,1,1,0,1,0,0,3,0,0,1],
+            [1,1,0,0,1,1,1,0,0,0,1,0,1,0,1],
+            [1,1,0,1,1,0,1,1,0,1,1,0,1,0,1],
+            [1,0,0,0,1,0,0,0,0,1,0,0,1,0,1],
+            [1,0,1,0,1,1,0,1,1,0,0,1,1,1,1],
+            [1,1,1,1,2,0,0,1,1,1,0,0,0,4,1]
         ];
+
+        for(let y = 0; y < rawMaze.length; y++) {
+            maze[y] = [];
+            for (let x = 0; x < rawMaze[y].length; x++) {
+                maze[y][x] = new Tile(rawMaze[y][x],x,y)
+            }
+        }
+
+        player = new Player(20,20)
+        gameOver = false
+        document.addEventListener("keydown", handleKeys);
+        
+        gameLoop();
+
     }
-
-    for (let row =0; row < 15; row++)
-        for (let column =0); column < 15; column++)
-    
-
-
-function handleKeys(e) {
-        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-            e.preventDefault();
+    function drawMaze() {
+        for (let row of maze) {
+            for (let tile of row) {
+                tile.draw(ctx)
+            }
         }
-
-        if (e.key === "w" && head.dy !== head.speed) {
-            head.dy = -head.speed;
-            head.dx = 0;
-        }
-
-        if (e.key === "s" && head.dy !== -head.speed) {
-            head.dy = head.speed;
-            head.dx = 0;
-        }
-
-        if (e.key === "a" && head.dx !== head.speed) {
-            head.dy = 0;
-            head.dx = -head.speed;
-        }
-
-        if (e.key === "d" && head.dx !== -head.speed) {
-            head.dy = 0;
-            head.dx = head.speed;
-        }
+    }
+    function gameLoop() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        drawMaze();
+        player.draw(ctx);
+        requestAnimationFrame(gameLoop);
     }
 
 
+    function handleKeys(e) {
+        if (e.key === "w") player.move(0,-20);
+        if (e.key === "a") player.move(-20,0);
+        if (e.key === "s") player.move(0,20);
+        if (e.key === "d") player.move(20,0);
+    }
+startGame();
     </script>
     </body>
 </html>
